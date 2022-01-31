@@ -15,6 +15,7 @@ type PairList []Pair
 
 func main() {
 
+	//Declearing Phrase for sample Input
 	phrase := `English is a Germanic language of the Indo-European language family, originally spoken by the inhabitants of early medieval 
 	England.[3][4][5] It is named after the Angles, one of the ancient Germanic peoples that migrated from Anglia, a peninsula on the Baltic Sea 
 	(not to be confused with East Anglia), to the area of Great Britain later named after them: England. The closest living relatives of 
@@ -29,9 +30,20 @@ func main() {
 	Early Modern English began in the late 15th century with the introduction of the printing press to London, the 
 	printing of the King James Bible and the start of the Great Vowel Shift.`
 
+	//Passing Phrase as parameter to TopTenStringCounts which returns top ten occuring string with count
+	topTen := TopTenStringCounts(phrase)
+
+	//Printing the result 
+	fmt.Printf("result = %v \n",topTen)
+
+}
+
+//Takes a string Phrase and return top ten occuring string with count
+func TopTenStringCounts(phrase string) PairList{
+	
 	stringArrey := strings.Fields(strings.ToLower(phrase))
 	count := map[string]int{}
-	for i := 0; i < len(stringArrey); i++ {
+	for i := 0; i < len(stringArrey); i++ {  //O(n)
 		val, ok := count[stringArrey[i]]
 		if ok {
 			count[stringArrey[i]] = val + 1
@@ -40,27 +52,28 @@ func main() {
 		}
 	}
 	list := rankByWordCount(count)
-	fmt.Println()
-	for i := 0 ; i < 10 ; i++ {
-	
-		fmt.Println(list[i].Key)
-		if i+1 > len(list)-1 {
-			break
-		}
-	}
+	return list[:10]
 }
 
+//sorting the map data in PairList
 func rankByWordCount(wordFrequencies map[string]int) PairList {
 	pl := make(PairList, len(wordFrequencies))
 	i := 0
-	for k, v := range wordFrequencies {
+	for k, v := range wordFrequencies {  //O(n)
 		pl[i] = Pair{k, v}
 		i++
 	}
-	sort.Sort(sort.Reverse(pl))
+	sort.Sort(sort.Reverse(pl))  
 	return pl
 }
 
+// O(n) + O(n) = O(2n) = O(n)
+
+// Returns length of PairList
 func (p PairList) Len() int           { return len(p) }
+
+//Returns true if ith index value in PairList is grather than jth index value else return false 
 func (p PairList) Less(i, j int) bool { return p[i].Value < p[j].Value }
+
+//Swap the value of ith index value with jth index value of PairList
 func (p PairList) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
